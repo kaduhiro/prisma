@@ -1,0 +1,26 @@
+version: '3.8'
+
+x-var: &COMMON
+  networks:
+    internal:
+
+networks:
+  internal:
+
+services:
+  prisma:
+    <<: *COMMON
+    build: ../../build
+    image: kaduhiro/prisma
+    container_name: prisma
+    hostname: prisma
+    ports:
+      - 3000:3000
+    volumes:
+      - ../..:/app
+    environment:
+      URL_PREFIX: /out
+    command:
+      - /bin/sh
+      - -c
+      - 'yarn && yarn build && yarn export && yarn serve'
