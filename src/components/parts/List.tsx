@@ -1,26 +1,45 @@
+import { useState } from 'react';
+
+import { Post } from '@/components/elements';
+import { PostModel } from '@/models/post';
+import { PostReadQuery, useReadPost } from '@/usecases/post';
+
 export const List = () => {
+  const [query, setQuery] = useState<PostReadQuery>({ limit: 10 });
+  const { data } = useReadPost(query);
+
+  const Posts = () => {
+    if (!data) {
+      const placeholder: PostModel = {
+        id: 0,
+        text: '',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      return (
+        <>
+          {[...Array(12)].map((_, i) => {
+            return <Post key={i} post={placeholder} />;
+          })}
+        </>
+      );
+    }
+
+    return (
+      <>
+        {data.posts.map((post) => {
+          return <Post key={post.id} post={post} />;
+        })}
+        <Post />
+      </>
+    );
+  };
+
   return (
     <div className='relative mx-auto px-4 pb-8 sm:max-w-xl md:max-w-full md:px-24 lg:max-w-screen-xl lg:px-8'>
-      <div className='absolute inset-x-0 top-0 hidden items-center justify-center overflow-hidden md:inset-y-0 md:flex'>
-        <svg viewBox='0 0 88 88' className='w-full max-w-screen-xl text-gray-800'>
-          <circle fill='currentColor' fillOpacity='0.4' cx='44' cy='44' r='15.5' />
-          <circle fillOpacity='0.1' fill='currentColor' cx='44' cy='44' r='44' />
-          <circle fillOpacity='0.1' fill='currentColor' cx='44' cy='44' r='37.5' />
-          <circle fillOpacity='0.1' fill='currentColor' cx='44' cy='44' r='29.5' />
-          <circle fillOpacity='0.1' fill='currentColor' cx='44' cy='44' r='22.5' />
-        </svg>
-      </div>
-      <div className='relative grid gap-5 sm:grid-cols-2 lg:grid-cols-4'>
-        {[...Array(20)].map((_, i) => {
-          return (
-            <div
-              key={i}
-              className='rounded bg-white/10 px-10 py-20 text-center shadow-2xl transition duration-300 hover:scale-105 hover:shadow-2xl md:shadow-xl'
-            >
-              <p className='font-semibold text-gray-200'>Block #{i + 1}</p>
-            </div>
-          );
-        })}
+      <div className='sm:columns-1 md:columns-2 lg:columns-3 xl:columns-4'>
+        <Posts />
       </div>
     </div>
   );
