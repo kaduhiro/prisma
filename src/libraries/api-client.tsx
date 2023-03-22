@@ -17,13 +17,15 @@ const request = async <T,>(args: ApiQueryArgs): Promise<T> => {
     try {
       apiUrl = new URL(url);
     } catch (error) {
-      if (error instanceof Error) {
-        const baseUrl = new URL(
-          process.env.NEXT_PUBLIC_API_ENDPOINT ? process.env.NEXT_PUBLIC_API_ENDPOINT : location.origin
-        );
+      let baseUrl: string;
 
-        apiUrl = new URL(url, baseUrl);
+      if (typeof window === 'undefined') {
+        baseUrl = process.env.API_ENDPOINT ? process.env.API_ENDPOINT : 'http://127.0.0.1';
+      } else {
+        baseUrl = process.env.NEXT_PUBLIC_API_ENDPOINT ? process.env.NEXT_PUBLIC_API_ENDPOINT : location.origin;
       }
+
+      apiUrl = new URL(url, baseUrl);
     }
   } catch (error) {
     throw error;
