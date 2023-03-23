@@ -19,8 +19,8 @@ export const usePostRepository = () => {
 };
 
 const readPostRepository = (client: IApiClient) => ({
-  async list(query?: RequestPostsData) {
-    if (!query) {
+  async list(query: RequestPostsData) {
+    if (!query.limit) {
       return {
         posts: [],
         count: 0,

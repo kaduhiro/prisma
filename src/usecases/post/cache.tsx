@@ -5,7 +5,7 @@ import { useMutate } from '@/hooks';
 import { PostCreateQuery, PostDeleteQuery, PostReadQuery } from '@/usecases/post';
 
 export const postCacheKeyGenerator = {
-  generateReadKey: (query: PostReadQuery) => {
+  generateReadKey: (query?: PostReadQuery) => {
     return [_Post.cacheKey.post, _RequestType.read, query];
   },
   generateCreateKey: (query?: PostCreateQuery) => {

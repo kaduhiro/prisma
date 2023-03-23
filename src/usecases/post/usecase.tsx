@@ -11,11 +11,11 @@ import {
 } from '@/usecases/post';
 import { PostReadQuery } from '@/usecases/post';
 
-export const useReadPost = (query: PostReadQuery) => {
+export const useReadPost = (query?: PostReadQuery) => {
   const repository = usePostRepository();
 
   return useSWR<PostReadResponse>(postCacheKeyGenerator.generateReadKey(query), () =>
-    repository.list(query?.limit ? { limit: query.limit } : undefined)
+    repository.list({ limit: query?.limit ? query.limit : 0 })
   );
 };
 
