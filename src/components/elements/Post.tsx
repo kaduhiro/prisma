@@ -76,7 +76,7 @@ export const Post = ({ post }: Props) => {
   if (!post.id) {
     return (
       <div className={`group mb-4 break-inside-avoid px-10 py-20 ${postClass}`}>
-        <div className='h-4 w-full bg-gray-600'></div>
+        <div className='h-4 w-full animate-pulse bg-gray-500'></div>
       </div>
     );
   }
