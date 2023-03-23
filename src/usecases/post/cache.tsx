@@ -8,7 +8,7 @@ export const postCacheKeyGenerator = {
   generateReadKey: (query: PostReadQuery) => {
     return [_Post.cacheKey.post, _RequestType.read, query];
   },
-  generateCreateKey: (query: PostCreateQuery) => {
+  generateCreateKey: (query?: PostCreateQuery) => {
     return [_Post.cacheKey.post, _RequestType.create, query];
   },
   generateDeleteKey: (query: PostDeleteQuery) => {

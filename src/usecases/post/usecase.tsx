@@ -19,12 +19,18 @@ export const useReadPost = (query: PostReadQuery) => {
   );
 };
 
-export const useCreatePost = (query: PostCreateQuery) => {
+export const useCreatePost = (query?: PostCreateQuery) => {
   const repository = usePostRepository();
 
   return useSWR<PostCreateResponse | null>(
     postCacheKeyGenerator.generateCreateKey(query),
-    () => repository.post({ text: query.text }),
+    () => {
+      if (!query) {
+        return null;
+      }
+
+      return repository.post({ text: query.text });
+    },
     {
       revalidateOnFocus: false,
     }

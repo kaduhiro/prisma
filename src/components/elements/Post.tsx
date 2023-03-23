@@ -15,7 +15,7 @@ export const Post = ({ post }: Props) => {
 
   const postRef = useRef<HTMLTextAreaElement>(null);
 
-  const [createQuery, setCreateQuery] = useState<PostCreateQuery>({ text: '' });
+  const [createQuery, setCreateQuery] = useState<PostCreateQuery>();
   const createResponse = useCreatePost(createQuery);
   useEffect(() => {
     if (createResponse.data) {
