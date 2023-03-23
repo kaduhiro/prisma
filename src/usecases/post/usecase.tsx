@@ -37,12 +37,18 @@ export const useCreatePost = (query?: PostCreateQuery) => {
   );
 };
 
-export const useDeletePost = (query: PostDeleteQuery) => {
+export const useDeletePost = (query?: PostDeleteQuery) => {
   const repository = usePostRepository();
 
   return useSWR<PostDeleteResponse | null>(
     postCacheKeyGenerator.generateDeleteKey(query),
-    () => repository.delete({ id: query.id }),
+    () => {
+      if (!query) {
+        return null;
+      }
+
+      return repository.delete({ id: query.id });
+    },
     {
       revalidateOnFocus: false,
     }

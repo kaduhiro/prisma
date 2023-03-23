@@ -11,7 +11,7 @@ export const postCacheKeyGenerator = {
   generateCreateKey: (query?: PostCreateQuery) => {
     return [_Post.cacheKey.post, _RequestType.create, query];
   },
-  generateDeleteKey: (query: PostDeleteQuery) => {
+  generateDeleteKey: (query?: PostDeleteQuery) => {
     return [_Post.cacheKey.post, _RequestType.delete, query];
   },
 };
