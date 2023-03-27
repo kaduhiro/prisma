@@ -110,7 +110,7 @@ const requestDelete = <T,>(args: ApiQueryArgs): Promise<ApiResponse<T>> => {
 const ApiClient: IApiClient = {
   get: requestGet,
   post: requestPost,
-  put: requestPost,
+  put: requestPut,
   delete: requestDelete,
 };
 
