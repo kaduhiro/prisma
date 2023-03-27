@@ -20,9 +20,15 @@ export type ApiQueryArgs = {
   options?: ApiQueryOptions;
 };
 
+export type ApiResponse<T> = {
+  status: number;
+  data?: T;
+  error?: string;
+};
+
 export interface IApiClient {
-  get: <T>(args: ApiQueryArgs) => Promise<T>;
-  post: <T>(args: ApiQueryArgs) => Promise<T>;
-  put: <T>(args: ApiQueryArgs) => Promise<T>;
-  delete: <T>(args: ApiQueryArgs) => Promise<T>;
+  get: <T>(args: ApiQueryArgs) => Promise<ApiResponse<T>>;
+  post: <T>(args: ApiQueryArgs) => Promise<ApiResponse<T>>;
+  put: <T>(args: ApiQueryArgs) => Promise<ApiResponse<T>>;
+  delete: <T>(args: ApiQueryArgs) => Promise<ApiResponse<T>>;
 }

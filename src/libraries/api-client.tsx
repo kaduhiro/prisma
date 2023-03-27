@@ -1,10 +1,10 @@
-import { ApiQueryArgs, IApiClient } from '@/types';
+import { ApiQueryArgs, ApiResponse, IApiClient } from '@/types';
 
 const headers = {
   Accept: 'application/json, */*',
 };
 
-const request = async <T,>(args: ApiQueryArgs): Promise<T> => {
+const request = async <T,>(args: ApiQueryArgs): Promise<ApiResponse<T>> => {
   const { method = 'GET', url, query, body, options } = args;
 
   let apiUrl: URL;
@@ -81,23 +81,29 @@ const request = async <T,>(args: ApiQueryArgs): Promise<T> => {
   apiUrl.pathname = paths.join('/');
 
   const res = await fetch(apiUrl, { headers, method: method, body: JSON.stringify(body), ...options });
+  if (!res.ok) {
+    return Promise.reject({ status: res.status, error: await res.json() });
+  }
 
-  return res.json();
+  return {
+    status: res.status,
+    data: await res.json(),
+  };
 };
 
-const requestGet = <T,>(args: ApiQueryArgs): Promise<T> => {
+const requestGet = <T,>(args: ApiQueryArgs): Promise<ApiResponse<T>> => {
   return request<T>({ ...args, method: 'GET' });
 };
 
-const requestPost = <T,>(args: ApiQueryArgs): Promise<T> => {
+const requestPost = <T,>(args: ApiQueryArgs): Promise<ApiResponse<T>> => {
   return request<T>({ ...args, method: 'POST' });
 };
 
-const requestPut = <T,>(args: ApiQueryArgs): Promise<T> => {
+const requestPut = <T,>(args: ApiQueryArgs): Promise<ApiResponse<T>> => {
   return request<T>({ ...args, method: 'PUT' });
 };
 
-const requestDelete = <T,>(args: ApiQueryArgs): Promise<T> => {
+const requestDelete = <T,>(args: ApiQueryArgs): Promise<ApiResponse<T>> => {
   return request<T>({ ...args, method: 'DELETE' });
 };
 
