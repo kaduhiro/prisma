@@ -105,6 +105,10 @@ const requestPut = <T,>(args: ApiQueryArgs): Promise<ApiResponse<T>> => {
   return request<T>({ ...args, method: 'PUT' });
 };
 
+const requestPatch = <T,>(args: ApiQueryArgs): Promise<ApiResponse<T>> => {
+  return request<T>({ ...args, method: 'PATCH' });
+};
+
 const requestDelete = <T,>(args: ApiQueryArgs): Promise<ApiResponse<T>> => {
   return request<T>({ ...args, method: 'DELETE' });
 };
@@ -113,6 +117,7 @@ const ApiClient: IApiClient = {
   get: requestGet,
   post: requestPost,
   put: requestPut,
+  patch: requestPatch,
   delete: requestDelete,
 };
 

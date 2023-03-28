@@ -1,4 +1,4 @@
-type ApiQueryMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+type ApiQueryMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 export type ApiQueryParams = Partial<{
   [key: string]: number | string | string[];
@@ -34,5 +34,6 @@ export interface IApiClient {
   get: <T>(args: ApiQueryArgs) => Promise<ApiResponse<T>>;
   post: <T>(args: ApiQueryArgs) => Promise<ApiResponse<T>>;
   put: <T>(args: ApiQueryArgs) => Promise<ApiResponse<T>>;
+  patch: <T>(args: ApiQueryArgs) => Promise<ApiResponse<T>>;
   delete: <T>(args: ApiQueryArgs) => Promise<ApiResponse<T>>;
 }
