@@ -20,16 +20,35 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         post = await prisma.post.findFirst({
           where: { id },
         });
+
         res.status(StatusCodes.OK).json({ post });
         break;
       case 'PUT':
+        post = JSON.parse(req.body) as Post;
+
+        post = await prisma.post.upsert({
+          where: { id },
+          create: post,
+          update: { body: post.body },
+        });
+
+        res.status(StatusCodes.OK).json({ post });
+        break;
       case 'PATCH':
-        res.status(StatusCodes.FORBIDDEN).json({ message: ReasonPhrases.FORBIDDEN });
+        post = JSON.parse(req.body) as Post;
+
+        post = await prisma.post.update({
+          where: { id },
+          data: { body: post.body },
+        });
+
+        res.status(StatusCodes.OK).json({ post });
         break;
       case 'DELETE':
         post = await prisma.post.delete({
           where: { id },
         });
+
         res.status(StatusCodes.OK).json({ post });
         break;
       default:
