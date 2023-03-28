@@ -1,6 +1,6 @@
 export type PostModel = {
   id: number;
-  text: string;
+  body: string;
   createdAt: Date;
   updatedAt: Date;
 };

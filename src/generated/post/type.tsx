@@ -12,7 +12,7 @@ export type ResponsePostsData = {
 
 // create
 export type RequestCreatePostData = {
-  text: string;
+  body: string;
 };
 
 export type ResponseCreatePostData = {

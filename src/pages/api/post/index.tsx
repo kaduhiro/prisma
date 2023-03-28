@@ -1,3 +1,4 @@
+import { Post } from '@prisma/client';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 
 import prisma from '@/libraries/prisma';
@@ -5,20 +6,21 @@ import prisma from '@/libraries/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  let post: Post | null;
+
   try {
     switch (req.method) {
       case 'GET':
         const posts = await prisma.post.findMany();
         const count = await prisma.post.count();
+
         res.status(StatusCodes.OK).json({ posts, count });
         break;
       case 'POST':
-        const { text } = JSON.parse(req.body);
+        post = JSON.parse(req.body) as Post;
 
-        const post = await prisma.post.create({
-          data: {
-            body: text,
-          },
+        post = await prisma.post.create({
+          data: post,
         });
 
         res.status(StatusCodes.OK).json({ post });

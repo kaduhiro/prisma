@@ -12,7 +12,7 @@ export const List = () => {
     if (!data) {
       const placeholder: PostModel = {
         id: 0,
-        text: '',
+        body: '',
         createdAt: new Date(),
         updatedAt: new Date(),
       };

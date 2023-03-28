@@ -12,7 +12,7 @@ export type PostReadResponse = {
 
 // create
 export type PostCreateQuery = {
-  text: string;
+  body: string;
 };
 
 export type PostCreateResponse = {
