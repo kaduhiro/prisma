@@ -1,4 +1,4 @@
-import { ApiQueryArgs, ApiResponse, IApiClient } from '@/types';
+import { ApiErrorResponse, ApiQueryArgs, ApiResponse, IApiClient } from '@/types';
 
 const headers = {
   Accept: 'application/json, */*',
@@ -82,7 +82,9 @@ const request = async <T,>(args: ApiQueryArgs): Promise<ApiResponse<T>> => {
 
   const res = await fetch(apiUrl, { headers, method: method, body: JSON.stringify(body), ...options });
   if (!res.ok) {
-    return Promise.reject({ status: res.status, error: await res.json() });
+    const error: ApiErrorResponse = await res.json();
+
+    return Promise.reject({ status: res.status, error: error.message });
   }
 
   return {

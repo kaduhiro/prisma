@@ -26,6 +26,10 @@ export type ApiResponse<T> = {
   error?: string;
 };
 
+export type ApiErrorResponse = {
+  message: string;
+};
+
 export interface IApiClient {
   get: <T>(args: ApiQueryArgs) => Promise<ApiResponse<T>>;
   post: <T>(args: ApiQueryArgs) => Promise<ApiResponse<T>>;
