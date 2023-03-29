@@ -7,16 +7,32 @@ import {
   PostCreateResponse,
   PostDeleteQuery,
   PostDeleteResponse,
+  PostReadQuery,
   PostReadResponse,
+  PostUpdateQuery,
+  PostUpdateResponse,
+  PostsReadQuery,
+  PostsReadResponse,
 } from '@/usecases/post';
-import { PostReadQuery } from '@/usecases/post';
+
+export const useReadPosts = (query?: PostsReadQuery) => {
+  const repository = usePostRepository();
+
+  return useSWR<PostsReadResponse>(postCacheKeyGenerator.generateReadKey(query), () =>
+    repository.list({ limit: query?.limit ? query.limit : 0 })
+  );
+};
 
 export const useReadPost = (query?: PostReadQuery) => {
   const repository = usePostRepository();
 
-  return useSWR<PostReadResponse>(postCacheKeyGenerator.generateReadKey(query), () =>
-    repository.list({ limit: query?.limit ? query.limit : 0 })
-  );
+  return useSWR<PostReadResponse | null>(postCacheKeyGenerator.generateReadKey(query), () => {
+    if (!query) {
+      return null;
+    }
+
+    return repository.get({ id: query.id });
+  });
 };
 
 export const useCreatePost = (query?: PostCreateQuery) => {
@@ -29,7 +45,25 @@ export const useCreatePost = (query?: PostCreateQuery) => {
         return null;
       }
 
-      return repository.post({ text: query.text });
+      return repository.post({ ...query });
+    },
+    {
+      revalidateOnFocus: false,
+    }
+  );
+};
+
+export const useUpdatePost = (query?: PostUpdateQuery) => {
+  const repository = usePostRepository();
+
+  return useSWR<PostUpdateResponse | null>(
+    postCacheKeyGenerator.generateUpdateKey(query),
+    () => {
+      if (!query) {
+        return null;
+      }
+
+      return repository.put({ post: { ...query.post } });
     },
     {
       revalidateOnFocus: false,

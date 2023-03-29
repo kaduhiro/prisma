@@ -1,13 +1,21 @@
 import { PostModel } from '@/models/post';
 
 // read
-export type PostReadQuery = {
+export type PostsReadQuery = {
   limit?: number;
 };
 
-export type PostReadResponse = {
+export type PostsReadResponse = {
   posts: PostModel[];
   count: number;
+};
+
+export type PostReadQuery = {
+  id: number;
+};
+
+export type PostReadResponse = {
+  post: PostModel;
 };
 
 // create
@@ -16,6 +24,15 @@ export type PostCreateQuery = {
 };
 
 export type PostCreateResponse = {
+  post: PostModel;
+};
+
+// update
+export type PostUpdateQuery = {
+  post: PostModel;
+};
+
+export type PostUpdateResponse = {
   post: PostModel;
 };
 
