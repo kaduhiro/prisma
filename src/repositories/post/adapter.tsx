@@ -1,19 +1,24 @@
-import { Post } from '@prisma/client';
-
-import { ResponseCreatePostData, ResponseDeletePostData, ResponsePostsData } from '@/generated/post/type';
+import {
+  ResponseCreatePostData,
+  ResponseDeletePostData,
+  ResponseReadPostsData,
+  ResponseReadPostData,
+  ResponseUpdatePostData,
+} from '@/generated/post';
 import { PostModel } from '@/models/post';
-import { PostCreateResponse, PostDeleteResponse, PostReadResponse } from '@/usecases/post';
+import {
+  PostCreateResponse,
+  PostDeleteResponse,
+  PostsReadResponse,
+  PostReadResponse,
+  PostUpdateResponse,
+} from '@/usecases/post';
 
-export const adaptPostsFromData = (data: ResponsePostsData): PostReadResponse => {
+export const adaptPostsFromData = (data: ResponseReadPostsData): PostsReadResponse => {
   const posts: PostModel[] = [];
 
-  data.posts.forEach((post: Post) => {
-    posts.push({
-      id: post.id,
-      text: post.body,
-      createdAt: post.createdAt ?? new Date(0),
-      updatedAt: post.updatedAt ?? new Date(0),
-    });
+  data.posts.forEach((post) => {
+    posts.push({ ...post });
   });
 
   return {
@@ -23,14 +28,9 @@ export const adaptPostsFromData = (data: ResponsePostsData): PostReadResponse =>
 };
 
 export const adaptPostFromData = (
-  data: ResponseCreatePostData | ResponseDeletePostData
-): PostCreateResponse | PostDeleteResponse => {
-  const post: PostModel = {
-    id: data.post.id,
-    text: data.post.body,
-    createdAt: data.post.createdAt ?? new Date(0),
-    updatedAt: data.post.updatedAt ?? new Date(0),
-  };
+  data: ResponseCreatePostData | ResponseDeletePostData | ResponseReadPostData | ResponseUpdatePostData
+): PostCreateResponse | PostDeleteResponse | PostReadResponse | PostUpdateResponse => {
+  const post: PostModel = { ...data.post };
 
   return { post };
 };

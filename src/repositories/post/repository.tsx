@@ -3,11 +3,15 @@ import { useMemo } from 'react';
 import {
   RequestCreatePostData,
   RequestDeletePostData,
-  RequestPostsData,
+  RequestReadPostData,
+  RequestReadPostsData,
+  RequestUpdatePostData,
   ResponseCreatePostData,
   ResponseDeletePostData,
-  ResponsePostsData,
-} from '@/generated/post/type';
+  ResponseUpdatePostData,
+  ResponseReadPostData,
+  ResponseReadPostsData,
+} from '@/generated/post';
 import ApiClient from '@/libraries/api-client';
 import { adaptPostFromData, adaptPostsFromData } from '@/repositories/post';
 import { IApiClient } from '@/types';
@@ -19,7 +23,7 @@ export const usePostRepository = () => {
 };
 
 const readPostRepository = (client: IApiClient) => ({
-  async list(query: RequestPostsData) {
+  async list(query: RequestReadPostsData) {
     if (!query.limit) {
       return {
         posts: [],
@@ -27,16 +31,50 @@ const readPostRepository = (client: IApiClient) => ({
       };
     }
 
-    const data = await client.get<ResponsePostsData>({ url: '/api/post' });
+    const { data, error } = await client.get<ResponseReadPostsData>({ url: '/api/post' });
+    if (!data) {
+      throw new Error(error);
+    }
 
     return adaptPostsFromData(data);
   },
-  async post(query: RequestCreatePostData) {
-    if (!query.text) {
+  async get(query: RequestReadPostData) {
+    if (!query.id) {
       return null;
     }
 
-    const data = await client.post<ResponseCreatePostData>({ url: '/api/post', body: query });
+    const { data, error } = await client.get<ResponseReadPostData>({ url: '/api/post/:id', query: { id: query.id } });
+    if (!data) {
+      throw new Error(error);
+    }
+
+    return adaptPostFromData(data);
+  },
+  async post(query: RequestCreatePostData) {
+    if (!Object.keys(query).length) {
+      return null;
+    }
+
+    const { data, error } = await client.post<ResponseCreatePostData>({ url: '/api/post', body: { ...query } });
+    if (!data) {
+      throw new Error(error);
+    }
+
+    return adaptPostFromData(data);
+  },
+  async put(query: RequestUpdatePostData) {
+    if (!query.post.id) {
+      return null;
+    }
+
+    const { data, error } = await client.put<ResponseUpdatePostData>({
+      url: '/api/post/:id',
+      query: { id: query.post.id },
+      body: JSON.parse(JSON.stringify(query.post)),
+    });
+    if (!data) {
+      throw new Error(error);
+    }
 
     return adaptPostFromData(data);
   },
@@ -45,7 +83,13 @@ const readPostRepository = (client: IApiClient) => ({
       return null;
     }
 
-    const data = await client.delete<ResponseDeletePostData>({ url: '/api/post/:id', query: { id: query.id } });
+    const { data, error } = await client.delete<ResponseDeletePostData>({
+      url: '/api/post/:id',
+      query: { id: query.id },
+    });
+    if (!data) {
+      throw new Error(error);
+    }
 
     return adaptPostFromData(data);
   },
