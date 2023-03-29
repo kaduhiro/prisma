@@ -4,7 +4,14 @@ import { faTrash, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { PostModel } from '@/models/post';
-import { PostCreateQuery, useCreatePost, useDeletePost, usePostCacheMutator } from '@/usecases/post';
+import {
+  PostCreateQuery,
+  PostUpdateQuery,
+  useCreatePost,
+  useDeletePost,
+  usePostCacheMutator,
+  useUpdatePost,
+} from '@/usecases/post';
 
 type Props = {
   post?: PostModel;
@@ -23,23 +30,43 @@ export const Post = ({ post }: Props) => {
     }
   }, [createResponse.data]);
 
-  const [editId, setEditId] = useState<number>();
+  const [updateQuery, setUpdateQuery] = useState<PostUpdateQuery>();
+  const updateResponse = useUpdatePost(updateQuery);
   useEffect(() => {
-    if (editId !== undefined && postRef.current) {
-      postRef.current.value = '';
+    if (updateResponse.data) {
+      mutateList();
+    }
+  }, [updateResponse.data]);
+
+  const [edit, setEdit] = useState<PostModel | null>();
+  useEffect(() => {
+    if (postRef.current) {
+      if (edit === null) {
+        postRef.current.value = '';
+      }
+      if (edit) {
+        postRef.current.value = edit.body;
+      }
       postRef.current.focus();
     }
-  }, [editId]);
+  }, [edit]);
 
-  const onEdit = (id: number) => {
-    setEditId(id);
+  const onEdit = (post?: PostModel) => {
+    setEdit(post ? post : null);
   };
 
   const onSave = () => {
     if (postRef.current?.value) {
-      setCreateQuery({ text: postRef.current.value });
+      if (edit === null) {
+        setCreateQuery({ body: postRef.current.value });
+      }
+      if (edit && edit.body != postRef.current.value) {
+        edit.body = postRef.current.value;
+        setUpdateQuery({ post: edit });
+      }
     }
-    setEditId(undefined);
+
+    setEdit(undefined);
   };
 
   const [deleteId, setDeleteId] = useState<number>(0);
@@ -57,18 +84,23 @@ export const Post = ({ post }: Props) => {
   const postClass =
     'rounded bg-white/10 text-center shadow-2xl transition duration-300 hover:scale-105 hover:shadow-2xl md:shadow-xl hover:scale-105 hover:cursor-pointer hover:text-white hover:shadow-2xl';
 
+  const Textarea = () => (
+    <textarea rows={6} className='w-full rounded bg-transparent p-4 outline-none' ref={postRef} onBlur={onSave} />
+  );
+
   if (!post) {
     return (
-      <div className={`flex items-center justify-center ${postClass}`} onClick={() => onEdit(0)}>
-        {editId !== 0 && (
-          <p className='flex w-full items-center justify-center gap-2 py-20 font-semibold capitalize duration-300 hover:opacity-60'>
+      <div className={`flex items-center justify-center ${postClass}`}>
+        {edit !== null && (
+          <p
+            className='flex w-full items-center justify-center gap-2 py-20 font-semibold capitalize duration-300 hover:opacity-60'
+            onClick={() => onEdit()}
+          >
             <FontAwesomeIcon icon={faPenToSquare} className='w-4' />
             new
           </p>
         )}
-        {editId === 0 && (
-          <textarea rows={6} className='w-full rounded bg-transparent p-4 outline-none' ref={postRef} onBlur={onSave} />
-        )}
+        {edit === null && <Textarea />}
       </div>
     );
   }
@@ -82,13 +114,20 @@ export const Post = ({ post }: Props) => {
   }
 
   return (
-    <div className={`group mb-4 break-inside-avoid px-10 py-20 ${postClass}`}>
-      <p className='break-all text-left font-semibold text-gray-200'>{post.text}</p>
-      <FontAwesomeIcon
-        icon={faTrash}
-        className='absolute right-4 bottom-4 hidden w-4 transition duration-200 hover:cursor-pointer hover:opacity-50 group-hover:block'
-        onClick={() => onDelete(post.id)}
-      />
+    <div className={`group mb-4 break-inside-avoid ${postClass}`}>
+      {edit?.id !== post.id && (
+        <>
+          <p className='break-all px-10 py-20 text-left font-semibold text-gray-200' onClick={() => onEdit(post)}>
+            {post.body}
+          </p>
+          <FontAwesomeIcon
+            icon={faTrash}
+            className='absolute right-4 bottom-4 hidden w-4 transition duration-200 hover:cursor-pointer hover:opacity-50 group-hover:block'
+            onClick={() => onDelete(post.id)}
+          />
+        </>
+      )}
+      {edit?.id === post.id && <Textarea />}
     </div>
   );
 };

@@ -2,11 +2,11 @@ import { useState } from 'react';
 
 import { Post } from '@/components/elements';
 import { PostModel } from '@/models/post';
-import { PostReadQuery, useReadPost } from '@/usecases/post';
+import { PostsReadQuery, useReadPosts } from '@/usecases/post';
 
 export const List = () => {
-  const [query, setQuery] = useState<PostReadQuery>({ limit: 10 });
-  const { data } = useReadPost(query);
+  const [query, setQuery] = useState<PostsReadQuery>({ limit: 10 });
+  const { data } = useReadPosts(query);
 
   const Posts = () => {
     if (!data) {
