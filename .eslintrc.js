@@ -10,7 +10,7 @@ module.exports = {
             group: ['../'],
           },
           {
-            group: ['@/entities/*/*', '@/repositories/*/repository', '@/usecases/*/usecase'],
+            group: ['@/entities/*/*', '@/models/*/*', '@/repositories/*/repository', '@/usecases/*/usecase'],
           },
           {
             group: ['@/components/elements/*', '@/components/layouts/*', '@/components/parts/*'],
@@ -41,7 +41,7 @@ module.exports = {
             position: 'before',
           },
           {
-            pattern: '@/entities/**,@/repositories/**,@/usecases/**,@/components/**',
+            pattern: '@/entities/**,@/models/**,@/repositories/**,@/usecases/**,@/components/**',
             group: 'internal',
             position: 'before',
           },
