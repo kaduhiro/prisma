@@ -16,7 +16,8 @@
     "db:studio": "dotenv -e .env.local -- npx prisma studio",
     "db:deploy": "dotenv -e .env.local -- npx prisma migrate deploy",
     "db:reset": "dotenv -e .env.local -- npx prisma db push --force-reset",
-    "db:seed": "dotenv -e .env.local -- npx prisma db seed"
+    "db:seed": "dotenv -e .env.local -- npx prisma db seed",
+    "db:rebuild": "yarn db:reset && yarn db:migrate && yarn db:generate"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
