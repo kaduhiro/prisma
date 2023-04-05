@@ -85,7 +85,12 @@ export const Post = ({ post }: Props) => {
     'rounded bg-white/10 text-center shadow-2xl transition duration-300 hover:scale-105 hover:shadow-2xl md:shadow-xl hover:scale-105 hover:cursor-pointer hover:text-white hover:shadow-2xl';
 
   const Textarea = () => (
-    <textarea rows={6} className='w-full rounded bg-transparent p-4 outline-none' ref={postRef} onBlur={onSave} />
+    <textarea
+      rows={6}
+      className='w-full overflow-hidden rounded bg-transparent px-10 py-20 outline-none'
+      ref={postRef}
+      onBlur={onSave}
+    />
   );
 
   if (!post) {
