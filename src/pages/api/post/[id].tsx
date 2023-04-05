@@ -21,6 +21,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           where: { id },
         });
 
+        if (!post) {
+          return res.status(StatusCodes.NOT_FOUND).json({ message: ReasonPhrases.NOT_FOUND });
+        }
+
         res.status(StatusCodes.OK).json({ post });
         break;
       case 'PUT':
