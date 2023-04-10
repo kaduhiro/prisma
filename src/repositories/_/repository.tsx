@@ -5,19 +5,19 @@ import pluralize from 'pluralize';
 import { _ } from '@/constants';
 import ApiClient from '@/libraries/api-client';
 import { adapt, adapts } from '@/repositories/_';
-import { IApiClient } from '@/types';
 import {
-  RequestCreateData,
-  RequestDeleteData,
-  RequestReadData,
+  IApiClient,
   RequestListData,
+  RequestReadData,
+  RequestCreateData,
   RequestUpdateData,
-  ResponseCreateData,
-  ResponseDeleteData,
-  ResponseUpdateData,
-  ResponseReadData,
+  RequestDeleteData,
   ResponseListData,
-} from '@/types/_';
+  ResponseReadData,
+  ResponseCreateData,
+  ResponseUpdateData,
+  ResponseDeleteData,
+} from '@/types';
 
 export const useRepository = <T,>(key: string) => {
   const client = ApiClient;

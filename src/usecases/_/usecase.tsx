@@ -2,17 +2,17 @@ import useSWR from 'swr';
 
 import { useRepository } from '@/repositories/_';
 import {
-  CreateQuery,
-  CreateResponse,
-  DeleteQuery,
-  DeleteResponse,
-  ReadQuery,
-  ReadResponse,
-  UpdateQuery,
-  UpdateResponse,
   ListQuery,
+  ReadQuery,
+  CreateQuery,
+  UpdateQuery,
+  DeleteQuery,
   ListResponse,
-} from '@/types/_';
+  ReadResponse,
+  UpdateResponse,
+  CreateResponse,
+  DeleteResponse,
+} from '@/types';
 import { useCacheKeyGenerator } from '@/usecases/_';
 
 export const useList = <T,>(key: string, query?: ListQuery) => {
