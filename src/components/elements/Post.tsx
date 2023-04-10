@@ -3,35 +3,30 @@ import { useEffect, useRef, useState } from 'react';
 import { faTrash, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { _ } from '@/constants';
 import { PostModel } from '@/models/post';
-import {
-  PostCreateQuery,
-  PostUpdateQuery,
-  useCreatePost,
-  useDeletePost,
-  usePostCacheMutator,
-  useUpdatePost,
-} from '@/usecases/post';
+import { CreateQuery, UpdateQuery } from '@/types';
+import { useCacheMutator, useCreate, useDelete, useUpdate } from '@/usecases/_';
 
 type Props = {
   post?: PostModel;
 };
 
 export const Post = ({ post }: Props) => {
-  const { mutateList } = usePostCacheMutator();
+  const { mutateList } = useCacheMutator(_.KEY.post);
 
   const postRef = useRef<HTMLTextAreaElement>(null);
 
-  const [createQuery, setCreateQuery] = useState<PostCreateQuery>();
-  const createResponse = useCreatePost(createQuery);
+  const [createQuery, setCreateQuery] = useState<CreateQuery>();
+  const createResponse = useCreate<PostModel>(_.KEY.post, createQuery);
   useEffect(() => {
     if (createResponse.data) {
       mutateList();
     }
   }, [createResponse.data]);
 
-  const [updateQuery, setUpdateQuery] = useState<PostUpdateQuery>();
-  const updateResponse = useUpdatePost(updateQuery);
+  const [updateQuery, setUpdateQuery] = useState<UpdateQuery>();
+  const updateResponse = useUpdate<PostModel>(_.KEY.post, updateQuery);
   useEffect(() => {
     if (updateResponse.data) {
       mutateList();
@@ -62,7 +57,7 @@ export const Post = ({ post }: Props) => {
       }
       if (edit && edit.body != postRef.current.value) {
         edit.body = postRef.current.value;
-        setUpdateQuery({ post: edit });
+        setUpdateQuery({ ...edit });
       }
     }
 
@@ -70,7 +65,7 @@ export const Post = ({ post }: Props) => {
   };
 
   const [deleteId, setDeleteId] = useState<number>(0);
-  const deleteResponse = useDeletePost({ id: deleteId });
+  const deleteResponse = useDelete<PostModel>(_.KEY.post, { id: deleteId });
   useEffect(() => {
     if (deleteResponse.data) {
       mutateList();
