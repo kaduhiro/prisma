@@ -4,9 +4,3 @@ export const _RequestType = {
   update: 'update',
   delete: 'delete',
 } as const;
-
-export const _Post = {
-  cacheKey: {
-    post: 'post',
-  },
-} as const;
