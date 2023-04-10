@@ -1,15 +1,17 @@
 import { useState } from 'react';
 
 import { Post } from '@/components/elements';
+import { _ } from '@/constants';
 import { PostModel } from '@/models/post';
-import { PostsReadQuery, useReadPosts } from '@/usecases/post';
+import { ListQuery } from '@/types';
+import { useList } from '@/usecases/_';
 
 export const List = () => {
-  const [query, setQuery] = useState<PostsReadQuery>({ limit: 10 });
-  const { data } = useReadPosts(query);
+  const [query] = useState<ListQuery>({ limit: 10 });
+  const { data } = useList<PostModel>(_.KEY.post, query);
 
   const Posts = () => {
-    if (!data) {
+    if (!data?.data) {
       const placeholder: PostModel = {
         id: 0,
         body: '',
@@ -28,7 +30,7 @@ export const List = () => {
 
     return (
       <>
-        {data.posts.map((post) => {
+        {data.data.map((post) => {
           return <Post key={post.id} post={post} />;
         })}
         <Post />
