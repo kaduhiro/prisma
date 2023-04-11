@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import { _RequestType } from '@/constants';
 import { useMutate } from '@/hooks';
-import { ListQuery, ReadQuery, CreateQuery, UpdateQuery, DeleteQuery } from '@/usecases/_';
+import { ListQuery, ReadQuery, CreateQuery, UpdateQuery, DeleteQuery } from '@/types';
 
 export const useCacheKeyGenerator = (key: string) => {
   const cache = createCacheKeyGenerator(key);
