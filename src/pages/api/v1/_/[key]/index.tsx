@@ -16,7 +16,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     switch (req.method) {
       case 'GET': {
-        const args = _.PRISMA_ARGS?.[key] ?? {};
+        const args = _.DATABASE_JOIN?.[key]
+          ? { include: Object.fromEntries(_.DATABASE_JOIN?.[key].map((key) => [key, true])) }
+          : {};
 
         const data = await prisma[key].findMany({ ...args });
         const count = await prisma[key].count();
