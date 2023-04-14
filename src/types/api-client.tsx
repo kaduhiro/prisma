@@ -1,4 +1,4 @@
-type ApiQueryMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+type ApiQueryMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 export type ApiQueryParams = Partial<{
   [key: string]: number | string | string[];
