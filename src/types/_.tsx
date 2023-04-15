@@ -17,7 +17,7 @@ export type ResponseReadData<T> = {
 };
 
 export type RequestCreateData = Partial<{
-  [key: string]: number | string | Date;
+  [key: string]: boolean | number | string | Date;
 }>;
 
 export type ResponseCreateData<T> = {
@@ -25,7 +25,7 @@ export type ResponseCreateData<T> = {
 };
 
 export type RequestUpdateData = Partial<{
-  [key: string]: number | string | Date;
+  [key: string]: boolean | number | string | Date;
 }>;
 
 export type ResponseUpdateData<T> = {
@@ -59,7 +59,7 @@ export type ReadResponse<T> = {
 };
 
 export type CreateQuery = Partial<{
-  [key: string]: number | string | Date;
+  [key: string]: boolean | number | string | Date;
 }>;
 
 export type CreateResponse<T> = {
@@ -67,7 +67,7 @@ export type CreateResponse<T> = {
 };
 
 export type UpdateQuery = Partial<{
-  [key: string]: number | string | Date;
+  [key: string]: boolean | number | string | Date;
 }>;
 
 export type UpdateResponse<T> = {
