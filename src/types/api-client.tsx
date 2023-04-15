@@ -1,15 +1,15 @@
 type ApiQueryMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 export type ApiQueryParams = Partial<{
-  [key: string]: number | string | string[];
+  [key: string]: boolean | number | string | string[];
 }>;
 
 export type ApiQueryData = Partial<{
-  [key: string]: number | string | string[];
+  [key: string]: boolean | number | string | string[];
 }>;
 
 export type ApiQueryOptions = Partial<{
-  [key: string]: number | string | string[];
+  [key: string]: boolean | number | string | string[];
 }>;
 
 export type ApiQueryArgs = {
