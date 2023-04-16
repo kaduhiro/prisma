@@ -1,4 +1,4 @@
-import { ApiErrorResponse, ApiQueryArgs, ApiResponse, IApiClient } from '@/types';
+import { ApiQueryArgs, ApiResponse, IApiClient } from '@/types';
 
 const headers = {
   Accept: 'application/json, */*',
