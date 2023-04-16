@@ -1,3 +1,5 @@
+import { StatusCodes } from 'http-status-codes';
+
 import { ApiQueryArgs, ApiResponse, IApiClient } from '@/types';
 
 const headers = {
@@ -80,17 +82,29 @@ const request = async <T,>(args: ApiQueryArgs): Promise<ApiResponse<T>> => {
 
   apiUrl.pathname = paths.join('/');
 
-  const res = await fetch(apiUrl, { headers, method: method, body: JSON.stringify(body), ...options });
-  if (!res.ok) {
-    const error: ApiErrorResponse = await res.json();
+  try {
+    const res = await fetch(apiUrl, { headers, method: method, body: JSON.stringify(body), ...options });
+    if (!res.ok) {
+      return { status: res.status, error: await res.json() };
+    }
 
-    return Promise.reject({ status: res.status, error: error.message });
+    return {
+      status: res.status,
+      data: await res.json(),
+    };
+  } catch (error) {
+    if (error instanceof TypeError) {
+      return Promise.reject({
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+        error: { message: error.cause },
+      });
+    } else {
+      return Promise.reject({
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+        error: { message: error.message },
+      });
+    }
   }
-
-  return {
-    status: res.status,
-    data: await res.json(),
-  };
 };
 
 const requestGet = <T,>(args: ApiQueryArgs): Promise<ApiResponse<T>> => {
