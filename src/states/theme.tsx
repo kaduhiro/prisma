@@ -1,4 +1,6 @@
-import { atom } from 'recoil';
+import { useEffect, useState } from 'react';
+
+import { atom, SetterOrUpdater, useRecoilState } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
 const { persistAtom } = recoilPersist({
@@ -6,14 +8,27 @@ const { persistAtom } = recoilPersist({
   storage: typeof window === 'undefined' ? undefined : sessionStorage,
 });
 
-export type themeStateType = {
+export type ThemeStateType = {
   dark: boolean;
 };
 
-export const themeState = atom<themeStateType>({
+const DEFAULT_STATE: ThemeStateType = {
+  dark: false,
+};
+
+export const themeState = atom<ThemeStateType>({
   key: 'theme',
-  default: {
-    dark: false,
-  },
+  default: DEFAULT_STATE,
   effects_UNSTABLE: [persistAtom],
 });
+
+export const useThemeState = (): [ThemeStateType, SetterOrUpdater<ThemeStateType>] => {
+  const [isMounted, setIsMounted] = useState<boolean>(false);
+  const [state, setState] = useRecoilState(themeState);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  return [isMounted ? state : DEFAULT_STATE, setState];
+};
