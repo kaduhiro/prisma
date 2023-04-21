@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import { _RequestType } from '@/constants';
 import { useMutate } from '@/hooks';
-import { ListQuery, ReadQuery, CreateQuery, UpdateQuery, DeleteQuery } from '@/types';
+import { ListQuery, ReadQuery, CreateQuery, UpdateQuery, DeleteQuery, UpsertQuery } from '@/types';
 
 export const useCacheKeyGenerator = (key: string) => {
   const cache = createCacheKeyGenerator(key);
@@ -16,6 +16,9 @@ const createCacheKeyGenerator = (key: string) => ({
   },
   generateCreateKey: (query?: CreateQuery) => {
     return [key, _RequestType.create, query];
+  },
+  generateUpsertKey: (query?: UpsertQuery) => {
+    return [key, _RequestType.upsert, query];
   },
   generateUpdateKey: (query?: UpdateQuery) => {
     return [key, _RequestType.update, query];
