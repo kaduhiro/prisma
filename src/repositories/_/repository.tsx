@@ -96,7 +96,7 @@ const createRepository = <T,>(client: IApiClient, key: string) => ({
 
     const { data, error } = await client.patch<ResponseUpdateData<T>>({
       url: `${_.API_ENDPOINT}/${pluralize(key)}/:id`,
-      query: { id: query.id as string },
+      query: { id: query.id },
       body: JSON.parse(JSON.stringify(query)),
     });
     if (!data) {
