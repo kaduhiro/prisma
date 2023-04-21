@@ -24,7 +24,17 @@ export type ResponseCreateData<T> = {
   data: T;
 };
 
+export type RequestUpsertData = Partial<{
+  id: number | string;
+  [key: string]: boolean | number | string | Date;
+}>;
+
+export type ResponseUpsertData<T> = {
+  data: T;
+};
+
 export type RequestUpdateData = Partial<{
+  id: number | string;
   [key: string]: boolean | number | string | Date;
 }>;
 
@@ -66,7 +76,17 @@ export type CreateResponse<T> = {
   data: T;
 };
 
+export type UpsertQuery = Partial<{
+  id: number | string;
+  [key: string]: boolean | number | string | Date;
+}>;
+
+export type UpsertResponse<T> = {
+  data: T;
+};
+
 export type UpdateQuery = Partial<{
+  id: number | string;
   [key: string]: boolean | number | string | Date;
 }>;
 
