@@ -12,6 +12,8 @@ import {
   UpdateResponse,
   CreateResponse,
   DeleteResponse,
+  UpsertQuery,
+  UpsertResponse,
 } from '@/types';
 import { useCacheKeyGenerator } from '@/usecases/_';
 
@@ -56,6 +58,25 @@ export const useCreate = <T,>(key: string, query?: CreateQuery) => {
   );
 };
 
+export const useUpsert = <T,>(key: string, query?: UpsertQuery) => {
+  const cache = useCacheKeyGenerator(key);
+  const repository = useRepository<T>(key);
+
+  return useSWR<UpsertResponse<T> | null>(
+    cache.generateUpsertKey(query),
+    () => {
+      if (!query) {
+        return null;
+      }
+
+      return repository.put(query);
+    },
+    {
+      revalidateOnFocus: false,
+    }
+  );
+};
+
 export const useUpdate = <T,>(key: string, query?: UpdateQuery) => {
   const cache = useCacheKeyGenerator(key);
   const repository = useRepository<T>(key);
@@ -67,7 +88,7 @@ export const useUpdate = <T,>(key: string, query?: UpdateQuery) => {
         return null;
       }
 
-      return repository.put(query);
+      return repository.patch(query);
     },
     {
       revalidateOnFocus: false,
