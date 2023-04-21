@@ -2,6 +2,7 @@ import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { singular } from 'pluralize';
 
 import { _ } from '@/constants';
+import { generateInclude } from '@/libraries/_';
 import prisma from '@/libraries/prisma';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -16,11 +17,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     switch (req.method) {
       case 'GET': {
-        const args = _.DATABASE_JOIN?.[key]
-          ? { include: Object.fromEntries(_.DATABASE_JOIN?.[key].map((key) => [key, true])) }
-          : {};
+        const args = {
+          ...generateInclude(_.INCLUDE?.[key]),
+        };
 
-        const data = await prisma[key].findMany({ ...args });
+        const data = await prisma[key].findMany(args);
         const count = await prisma[key].count();
 
         res.status(StatusCodes.OK).json({ data, count });
