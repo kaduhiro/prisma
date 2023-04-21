@@ -17,6 +17,8 @@ import {
   ResponseCreateData,
   ResponseUpdateData,
   ResponseDeleteData,
+  RequestUpsertData,
+  ResponseUpsertData,
 } from '@/types';
 
 export const useRepository = <T,>(key: string) => {
@@ -71,12 +73,28 @@ const createRepository = <T,>(client: IApiClient, key: string) => ({
 
     return adapt<T>(data);
   },
-  async put(query: RequestUpdateData) {
+  async put(query: RequestUpsertData) {
     if (!query.id) {
       return null;
     }
 
-    const { data, error } = await client.put<ResponseUpdateData<T>>({
+    const { data, error } = await client.put<ResponseUpsertData<T>>({
+      url: `${_.API_ENDPOINT}/${pluralize(key)}/:id`,
+      query: { id: query.id },
+      body: JSON.parse(JSON.stringify(query)),
+    });
+    if (!data) {
+      throw new Error(error);
+    }
+
+    return adapt<T>(data);
+  },
+  async patch(query: RequestUpdateData) {
+    if (!query.id) {
+      return null;
+    }
+
+    const { data, error } = await client.patch<ResponseUpdateData<T>>({
       url: `${_.API_ENDPOINT}/${pluralize(key)}/:id`,
       query: { id: query.id as string },
       body: JSON.parse(JSON.stringify(query)),
