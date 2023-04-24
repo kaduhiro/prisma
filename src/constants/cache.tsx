@@ -1,4 +1,4 @@
-export const _RequestType = {
+export const CACHE_REQUEST_TYPE = {
   create: 'create',
   read: 'read',
   upsert: 'upsert',
