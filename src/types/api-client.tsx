@@ -26,7 +26,7 @@ export type ApiResponse<T> = {
   error?: string;
 };
 
-export interface IApiClient {
+export interface ApiClientInterface {
   get: <T>(args: ApiQueryArgs) => Promise<ApiResponse<T>>;
   post: <T>(args: ApiQueryArgs) => Promise<ApiResponse<T>>;
   put: <T>(args: ApiQueryArgs) => Promise<ApiResponse<T>>;

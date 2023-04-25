@@ -6,7 +6,7 @@ import { _ } from '@/constants';
 import ApiClient from '@/libraries/api-client';
 import { adapt, adapts } from '@/repositories/_';
 import {
-  IApiClient,
+  ApiClientInterface,
   RequestListData,
   RequestReadData,
   RequestCreateData,
@@ -27,7 +27,7 @@ export const useRepository = <T,>(key: string) => {
   return useMemo(() => createRepository<T>(client, key), [client, key]);
 };
 
-const createRepository = <T,>(client: IApiClient, key: string) => ({
+const createRepository = <T,>(client: ApiClientInterface, key: string) => ({
   async list(req: RequestListData) {
     if (!req.limit) {
       return {

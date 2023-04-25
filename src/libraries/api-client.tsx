@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 
-import { ApiQueryArgs, ApiResponse, IApiClient } from '@/types';
+import { ApiQueryArgs, ApiResponse, ApiClientInterface } from '@/types';
 
 const headers = {
   Accept: 'application/json, */*',
@@ -127,7 +127,7 @@ const requestDelete = <T,>(args: ApiQueryArgs): Promise<ApiResponse<T>> => {
   return request<T>({ ...args, method: 'DELETE' });
 };
 
-const ApiClient: IApiClient = {
+const ApiClient: ApiClientInterface = {
   get: requestGet,
   post: requestPost,
   put: requestPut,
