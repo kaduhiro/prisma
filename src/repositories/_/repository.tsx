@@ -36,7 +36,10 @@ const createRepository = <T,>(client: IApiClient, key: string) => ({
       };
     }
 
-    const { data, error } = await client.get<ResponseListData<T>>({ url: `${_.API_ENDPOINT}/${pluralize(key)}` });
+    const { data, error } = await client.get<ResponseListData<T>>({
+      url: `${_.API_ENDPOINT}/${pluralize(key)}`,
+      query,
+    });
     if (!data) {
       throw new Error(error);
     }
