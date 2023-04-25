@@ -28,8 +28,8 @@ export const useRepository = <T,>(key: string) => {
 };
 
 const createRepository = <T,>(client: IApiClient, key: string) => ({
-  async list(query: RequestListData) {
-    if (!query.limit) {
+  async list(req: RequestListData) {
+    if (!req.limit) {
       return {
         data: [],
         count: 0,
@@ -38,7 +38,7 @@ const createRepository = <T,>(client: IApiClient, key: string) => ({
 
     const { data, error } = await client.get<ResponseListData<T>>({
       url: `${_.API_ENDPOINT}/${pluralize(key)}`,
-      query,
+      query: req,
     });
     if (!data) {
       throw new Error(error);
@@ -46,14 +46,14 @@ const createRepository = <T,>(client: IApiClient, key: string) => ({
 
     return adapts<T>(data);
   },
-  async get(query: RequestReadData) {
-    if (!query.id) {
+  async get(req: RequestReadData) {
+    if (!req.id) {
       return null;
     }
 
     const { data, error } = await client.get<ResponseReadData<T>>({
       url: `${_.API_ENDPOINT}/${pluralize(key)}/:id`,
-      query: { id: query.id },
+      query: { id: req.id },
     });
     if (!data) {
       throw new Error(error);
@@ -61,14 +61,14 @@ const createRepository = <T,>(client: IApiClient, key: string) => ({
 
     return adapt<T>(data);
   },
-  async post(query: RequestCreateData) {
-    if (!Object.keys(query).length) {
+  async post(req: RequestCreateData) {
+    if (!Object.keys(req).length) {
       return null;
     }
 
     const { data, error } = await client.post<ResponseCreateData<T>>({
       url: `${_.API_ENDPOINT}/${pluralize(key)}`,
-      body: JSON.parse(JSON.stringify(query)),
+      body: JSON.parse(JSON.stringify(req)),
     });
     if (!data) {
       throw new Error(error);
@@ -76,15 +76,15 @@ const createRepository = <T,>(client: IApiClient, key: string) => ({
 
     return adapt<T>(data);
   },
-  async put(query: RequestUpsertData) {
-    if (!query.id) {
+  async put(req: RequestUpsertData) {
+    if (!req.id) {
       return null;
     }
 
     const { data, error } = await client.put<ResponseUpsertData<T>>({
       url: `${_.API_ENDPOINT}/${pluralize(key)}/:id`,
-      query: { id: query.id },
-      body: JSON.parse(JSON.stringify(query)),
+      query: { id: req.id },
+      body: JSON.parse(JSON.stringify(req)),
     });
     if (!data) {
       throw new Error(error);
@@ -92,15 +92,15 @@ const createRepository = <T,>(client: IApiClient, key: string) => ({
 
     return adapt<T>(data);
   },
-  async patch(query: RequestUpdateData) {
-    if (!query.id) {
+  async patch(req: RequestUpdateData) {
+    if (!req.id) {
       return null;
     }
 
     const { data, error } = await client.patch<ResponseUpdateData<T>>({
       url: `${_.API_ENDPOINT}/${pluralize(key)}/:id`,
-      query: { id: query.id },
-      body: JSON.parse(JSON.stringify(query)),
+      query: { id: req.id },
+      body: JSON.parse(JSON.stringify(req)),
     });
     if (!data) {
       throw new Error(error);
@@ -108,14 +108,14 @@ const createRepository = <T,>(client: IApiClient, key: string) => ({
 
     return adapt<T>(data);
   },
-  async delete(query: RequestDeleteData) {
-    if (!query.id) {
+  async delete(req: RequestDeleteData) {
+    if (!req.id) {
       return null;
     }
 
     const { data, error } = await client.delete<ResponseDeleteData<T>>({
       url: `${_.API_ENDPOINT}/${pluralize(key)}/:id`,
-      query: { id: query.id },
+      query: { id: req.id },
     });
     if (!data) {
       throw new Error(error);
