@@ -21,6 +21,7 @@ export const adapts = <T,>(res: ResponseListData<T>): ListResponse<T> => {
   return {
     data: result,
     count: res.count,
+    page: res.page,
   };
 };
 

@@ -29,7 +29,9 @@ export const useRepository = <T,>(key: string) => {
 
 const createRepository = <T,>(client: ApiClientInterface, key: string) => ({
   async list(req: RequestListData) {
-    if (!req.limit) {
+    const { page, ...query } = req;
+
+    if (!query.limit && !page) {
       return {
         data: [],
         count: 0,
@@ -38,7 +40,10 @@ const createRepository = <T,>(client: ApiClientInterface, key: string) => ({
 
     const { data, error } = await client.get<ResponseListData<T>>({
       url: `${_.API_ENDPOINT}/${pluralize(key)}`,
-      query: req,
+      query: {
+        ...page,
+        ...query,
+      },
     });
     if (!data) {
       throw new Error(error);
