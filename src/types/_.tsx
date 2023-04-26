@@ -74,11 +74,14 @@ export type ResponseDeleteData<T> = {
 // usecase
 export type ListQuery = {
   limit?: number;
+  offset?: number;
+  page?: RequestPagination;
 };
 
 export type ListResponse<T> = {
   data: T[];
   count: number;
+  page?: ResponsePagination;
 };
 
 export type ReadQuery = {

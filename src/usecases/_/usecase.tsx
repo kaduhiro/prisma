@@ -22,7 +22,11 @@ export const useList = <T,>(key: string, query?: ListQuery) => {
   const repository = useRepository<T>(key);
 
   return useSWR<ListResponse<T>>(cache.generateReadKey(query), () =>
-    repository.list({ limit: query?.limit ? query.limit : 0 })
+    repository.list({
+      page: query?.page,
+      limit: query?.limit,
+      offset: query?.offset,
+    })
   );
 };
 
