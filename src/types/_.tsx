@@ -81,6 +81,7 @@ export type ResponseDeleteData<T> = {
 export type ListQuery = {
   limit?: number;
   offset?: number;
+  order?: RequestOrder;
   page?: RequestPagination;
 };
 

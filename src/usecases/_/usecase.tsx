@@ -23,9 +23,10 @@ export const useList = <T,>(key: string, query?: ListQuery) => {
 
   return useSWR<ListResponse<T>>(cache.generateReadKey(query), () =>
     repository.list({
-      page: query?.page,
       limit: query?.limit,
       offset: query?.offset,
+      order: query?.order,
+      page: query?.page,
     })
   );
 };
