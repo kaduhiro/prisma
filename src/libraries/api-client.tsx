@@ -35,6 +35,9 @@ const request = async <T,>(args: ApiQueryArgs): Promise<ApiResponse<T>> => {
 
   Object.keys({ ...query }).map((key) => {
     let values = { ...query }[key];
+    if (values === undefined) {
+      return;
+    }
 
     if (!Array.isArray(values)) {
       values = [String(values)];
