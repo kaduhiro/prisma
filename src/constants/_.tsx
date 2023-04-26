@@ -6,4 +6,5 @@ export const _ = {
   INCLUDE: {
     post: {},
   },
+  PER_PAGE: 10,
 } as const;

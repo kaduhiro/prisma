@@ -2,7 +2,7 @@ import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { singular } from 'pluralize';
 
 import { _ } from '@/constants';
-import { generateInclude } from '@/libraries/_';
+import { generateInclude, paginateNavigation, paginatePrisma } from '@/libraries/_';
 import prisma from '@/libraries/prisma';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -17,14 +17,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     switch (req.method) {
       case 'GET': {
-        const args = {
-          ...generateInclude(_.INCLUDE?.[key]),
-        };
+        const prismaArgs = paginatePrisma(req.query);
+        if (!prismaArgs) {
+          return res.status(StatusCodes.BAD_REQUEST).json({ message: ReasonPhrases.BAD_REQUEST });
+        }
 
-        const data = await prisma[key].findMany(args);
+        const { pagination, ...args } = prismaArgs;
+
+        const data = await prisma[key].findMany({ ...args, ...generateInclude(_.INCLUDE?.[key]) });
         const count = await prisma[key].count();
 
-        res.status(StatusCodes.OK).json({ data, count });
+        const page = paginateNavigation(count, pagination);
+
+        res.status(StatusCodes.OK).json({ data, count, page });
         break;
       }
       case 'POST': {

@@ -1,11 +1,32 @@
+// api
+export type RequestPagination = {
+  page: number;
+  perPage?: number;
+};
+
+export type ResponsePagination = {
+  prev?: number;
+  next?: number;
+  count: number;
+};
+
+export type PrismaFindManyArgs = {
+  take?: number;
+  skip?: number;
+  pagination?: RequestPagination;
+};
+
 // repository
 export type RequestListData = {
-  limit: number;
+  limit?: number;
+  offset?: number;
+  page?: RequestPagination;
 };
 
 export type ResponseListData<T> = {
   data: T[];
   count: number;
+  page?: ResponsePagination;
 };
 
 export type RequestReadData = {
