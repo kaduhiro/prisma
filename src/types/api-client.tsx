@@ -1,3 +1,5 @@
+import { StatusCodes } from 'http-status-codes';
+
 type ApiQueryMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 export type ApiQueryParams = Partial<{
@@ -21,9 +23,13 @@ export type ApiQueryArgs = {
 };
 
 export type ApiResponse<T> = {
-  status: number;
+  status: StatusCodes;
   data?: T;
-  error?: string;
+  error?: ApiError | string;
+};
+
+export type ApiError = {
+  message: string;
 };
 
 export interface ApiClientInterface {
