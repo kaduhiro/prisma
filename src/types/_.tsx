@@ -25,6 +25,7 @@ export type PrismaFindManyArgs = {
 export type RequestListData = {
   limit?: number;
   offset?: number;
+  order?: RequestOrder;
   page?: RequestPagination;
 };
 

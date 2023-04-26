@@ -29,7 +29,7 @@ export const useRepository = <T,>(key: string) => {
 
 const createRepository = <T,>(client: ApiClientInterface, key: string) => ({
   async list(req: RequestListData) {
-    const { page, ...query } = req;
+    const { order, page, ...query } = req;
 
     if (!query.limit && !page) {
       return {
@@ -37,10 +37,10 @@ const createRepository = <T,>(client: ApiClientInterface, key: string) => ({
         count: 0,
       };
     }
-
     const { data, error } = await client.get<ResponseListData<T>>({
       url: `${_.API_ENDPOINT}/${pluralize(key)}`,
       query: {
+        order: order !== undefined ? JSON.stringify(order) : undefined,
         ...page,
         ...query,
       },
