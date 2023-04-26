@@ -1,5 +1,5 @@
 import { _ } from '@/constants';
-import { PrismaFindManyArgs, RequestPagination, ResponsePagination } from '@/types';
+import { PrismaFindManyArgs, RequestOrder, RequestPagination, ResponsePagination } from '@/types';
 
 type _Include = { include: _Include } | true;
 
@@ -28,6 +28,15 @@ export const paginatePrisma = (
   let take = typeof query.limit === 'string' ? Number(query.limit) : _.PER_PAGE;
   let skip = typeof query.offset === 'string' ? Number(query.offset) : 0;
 
+  // order
+  let orderBy: RequestOrder = {};
+  if (typeof query.order === 'string') {
+    const order = JSON.parse(query.order);
+    Object.keys(order).map((key) => {
+      orderBy[key] = typeof order[key] === 'boolean' ? (order[key] ? 'asc' : 'desc') : order[key];
+    });
+  }
+
   // pagination
   const page = typeof query.page === 'string' ? Number(query.page) : undefined;
 
@@ -54,6 +63,7 @@ export const paginatePrisma = (
   return {
     take,
     skip,
+    orderBy,
     pagination,
   };
 };

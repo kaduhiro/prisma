@@ -4,6 +4,10 @@ export type RequestPagination = {
   perPage?: number;
 };
 
+export type RequestOrder = Partial<{
+  [key: string]: boolean | 'asc' | 'desc';
+}>;
+
 export type ResponsePagination = {
   prev?: number;
   next?: number;
@@ -13,6 +17,7 @@ export type ResponsePagination = {
 export type PrismaFindManyArgs = {
   take?: number;
   skip?: number;
+  orderBy?: RequestOrder;
   pagination?: RequestPagination;
 };
 
