@@ -4,6 +4,10 @@ export type RequestPagination = {
   perPage?: number;
 };
 
+export type RequestWhere = Partial<{
+  [key: string]: boolean | number | string | Date | RequestWhere;
+}>;
+
 export type RequestOrder = Partial<{
   [key: string]: boolean | 'asc' | 'desc';
 }>;
@@ -15,6 +19,7 @@ export type ResponsePagination = {
 };
 
 export type PrismaFindManyArgs = {
+  where?: RequestWhere;
   take?: number;
   skip?: number;
   orderBy?: RequestOrder;
@@ -23,6 +28,7 @@ export type PrismaFindManyArgs = {
 
 // repository
 export type RequestListData = {
+  where?: RequestWhere;
   limit?: number;
   offset?: number;
   order?: RequestOrder;
@@ -79,6 +85,7 @@ export type ResponseDeleteData<T> = {
 
 // usecase
 export type ListQuery = {
+  where?: RequestWhere;
   limit?: number;
   offset?: number;
   order?: RequestOrder;

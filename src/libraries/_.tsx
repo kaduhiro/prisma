@@ -24,6 +24,12 @@ export const generateInclude = (input?: Record<string, any>): _Include => {
 export const paginatePrisma = (
   query: Partial<{ [key: string]: string | string[] }>
 ): PrismaFindManyArgs | undefined => {
+  // where
+  let where = {};
+  if (typeof query.where === 'string') {
+    where = JSON.parse(query.where);
+  }
+
   // limit, offset
   let take = typeof query.limit === 'string' ? Number(query.limit) : _.PER_PAGE;
   let skip = typeof query.offset === 'string' ? Number(query.offset) : 0;
@@ -61,6 +67,7 @@ export const paginatePrisma = (
   }
 
   return {
+    where,
     take,
     skip,
     orderBy,

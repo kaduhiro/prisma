@@ -25,7 +25,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const { pagination, ...args } = prismaArgs;
 
         const data = await prisma[key].findMany({ ...args, ...generateInclude(_.INCLUDE?.[key]) });
-        const count = await prisma[key].count();
+        const count = await prisma[key].count({ where: args.where });
 
         const page = paginateNavigation(count, pagination);
 
