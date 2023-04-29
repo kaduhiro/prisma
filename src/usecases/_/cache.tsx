@@ -34,7 +34,7 @@ export const useCacheMutator = (key: string) => {
 
   return useMemo(
     () => ({
-      mutateList: () => mutate(cache.generateReadKey({})),
+      mutateList: () => mutate(cache.generateReadKey()),
     }),
     [mutate]
   );
