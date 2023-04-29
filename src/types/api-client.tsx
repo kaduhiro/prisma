@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 type ApiQueryMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 export type ApiQueryParams = Partial<{
-  [key: string]: boolean | number | string | string[];
+  [key: string]: boolean | number | string | string[] | undefined;
 }>;
 
 export type ApiQueryData = Partial<{
