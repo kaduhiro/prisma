@@ -1,24 +1,30 @@
 import { _ } from '@/constants';
-import { PrismaFindManyArgs, RequestOrder, RequestPagination, ResponsePagination } from '@/types';
+import {
+  PrismaFindManyArgs,
+  RequestOrder,
+  RequestPagination,
+  ResponsePagination,
+  _IncludeType,
+  _IncludeTypeObject,
+} from '@/types';
 
-type _Include = { include: _Include } | true;
+export const generateInclude = (input?: _IncludeType): _IncludeTypeObject => {
+  const include: _IncludeType = {};
 
-export const generateInclude = (input?: Record<string, any>): _Include => {
-  const include: _Include = {} as _Include;
+  switch (typeof input) {
+    case 'undefined':
+    case 'boolean':
+      break;
+    case 'object':
+      Object.keys(input).forEach((key) => {
+        const value = generateInclude(input[key]);
 
-  if (!input || !Object.keys(input).length) {
-    return include;
+        include[key] = Object.keys(value).length ? value : true;
+      });
+      break;
   }
 
-  Object.keys(input).forEach((key) => {
-    if (Object.keys(input[key]).length > 0) {
-      include[key] = generateInclude(input[key]);
-    } else {
-      include[key] = input[key] ? true : false;
-    }
-  });
-
-  return { include };
+  return Object.keys(include).length ? { include } : include;
 };
 
 export const paginatePrisma = (
