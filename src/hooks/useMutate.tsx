@@ -4,7 +4,11 @@ import { Arguments, MutatorOptions, serialize } from 'swr/_internal';
 export const useMutate = () => {
   const { cache, mutate } = useSWRConfig();
 
-  const clearMutate = (key: Arguments, data?: any, opts?: boolean | MutatorOptions<any> | undefined) => {
+  const clearMutate = (key?: Arguments, data?: any, opts?: boolean | MutatorOptions<any> | undefined) => {
+    if (typeof key === 'undefined') {
+      return;
+    }
+
     if (Array.isArray(key)) {
       key = key.filter((v) => v);
     }
