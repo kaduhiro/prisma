@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import pluralize from 'pluralize';
 
 import { _ } from '@/constants';
-import ApiClient from '@/libraries/api-client';
+import ApiClient, { createError } from '@/libraries/api-client';
 import { adapt, adapts } from '@/repositories/_';
 import {
   ApiClientInterface,
@@ -21,16 +21,15 @@ import {
   ResponseUpsertData,
 } from '@/types';
 
-export const useRepository = <T,>(key: string) => {
+export const useRepository = <T,>(key?: string) => {
   const client = ApiClient;
 
-  return useMemo(() => createRepository<T>(client, key), [client, key]);
+  return useMemo(() => (typeof key === 'undefined' ? undefined : createRepository<T>(key, client)), [key, client]);
 };
 
-const createRepository = <T,>(client: ApiClientInterface, key: string) => ({
+const createRepository = <T,>(key: string, client: ApiClientInterface) => ({
   async list(req: RequestListData) {
     const { where, order, page, ...query } = req;
-
     if (!query.limit && !page) {
       return {
         data: [],
@@ -48,14 +47,14 @@ const createRepository = <T,>(client: ApiClientInterface, key: string) => ({
       },
     });
     if (!data) {
-      throw new Error(error);
+      throw createError(error);
     }
 
     return adapts<T>(data);
   },
   async get(req: RequestReadData) {
     if (!req.id) {
-      return null;
+      return undefined;
     }
 
     const { data, error } = await client.get<ResponseReadData<T>>({
@@ -63,14 +62,14 @@ const createRepository = <T,>(client: ApiClientInterface, key: string) => ({
       query: { id: req.id },
     });
     if (!data) {
-      throw new Error(error);
+      throw createError(error);
     }
 
     return adapt<T>(data);
   },
   async post(req: RequestCreateData) {
     if (!Object.keys(req).length) {
-      return null;
+      return undefined;
     }
 
     const { data, error } = await client.post<ResponseCreateData<T>>({
@@ -78,14 +77,14 @@ const createRepository = <T,>(client: ApiClientInterface, key: string) => ({
       body: JSON.parse(JSON.stringify(req)),
     });
     if (!data) {
-      throw new Error(error);
+      throw createError(error);
     }
 
     return adapt<T>(data);
   },
   async put(req: RequestUpsertData) {
     if (!req.id) {
-      return null;
+      return undefined;
     }
 
     const { data, error } = await client.put<ResponseUpsertData<T>>({
@@ -94,14 +93,14 @@ const createRepository = <T,>(client: ApiClientInterface, key: string) => ({
       body: JSON.parse(JSON.stringify(req)),
     });
     if (!data) {
-      throw new Error(error);
+      throw createError(error);
     }
 
     return adapt<T>(data);
   },
   async patch(req: RequestUpdateData) {
     if (!req.id) {
-      return null;
+      return undefined;
     }
 
     const { data, error } = await client.patch<ResponseUpdateData<T>>({
@@ -110,14 +109,14 @@ const createRepository = <T,>(client: ApiClientInterface, key: string) => ({
       body: JSON.parse(JSON.stringify(req)),
     });
     if (!data) {
-      throw new Error(error);
+      throw createError(error);
     }
 
     return adapt<T>(data);
   },
   async delete(req: RequestDeleteData) {
     if (!req.id) {
-      return null;
+      return undefined;
     }
 
     const { data, error } = await client.delete<ResponseDeleteData<T>>({
@@ -125,7 +124,7 @@ const createRepository = <T,>(client: ApiClientInterface, key: string) => ({
       query: { id: req.id },
     });
     if (!data) {
-      throw new Error(error);
+      throw createError(error);
     }
 
     return adapt<T>(data);

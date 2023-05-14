@@ -131,6 +131,20 @@ const requestDelete = <T,>(args: ApiQueryArgs): Promise<ApiResponse<T>> => {
   return request<T>({ ...args, method: 'DELETE' });
 };
 
+export const createError = (error?: string | ApiError) => {
+  let message = 'error';
+
+  if (typeof error === 'undefined') {
+    message = 'undefined error';
+  } else if (typeof error === 'string') {
+    message = error;
+  } else if (error instanceof Error) {
+    message = error.message;
+  }
+
+  return new Error(message);
+};
+
 const ApiClient: ApiClientInterface = {
   get: requestGet,
   post: requestPost,
