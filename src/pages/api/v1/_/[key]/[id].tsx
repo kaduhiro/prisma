@@ -1,22 +1,22 @@
-import { PrismaClient } from '@prisma/client';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { singular } from 'pluralize';
 
 import { _ } from '@/constants';
 import { generateInclude } from '@/libraries/_';
+import prisma from '@/libraries/prisma';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const key = singular(req.query.key as string);
+  const key = singular(req.query.key?.toString() ?? '');
 
-  const prisma = new PrismaClient();
-  if (!Object.keys(prisma).includes(key)) {
+  const entity: Partial<{ [key: string]: any }> = prisma[key as keyof typeof prisma];
+  if (typeof entity === 'undefined') {
     res.status(StatusCodes.FORBIDDEN).json({ message: ReasonPhrases.FORBIDDEN });
   }
 
   try {
-    let id: number | string = Number(req.query.id) ? Number(req.query.id) : String(req.query.id);
+    const id: number | string = Number(req.query.id) ? Number(req.query.id) : String(req.query.id);
 
     if (!id) {
       return res.status(StatusCodes.BAD_REQUEST).json({ message: 'ID is required.' });
@@ -28,7 +28,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           ...generateInclude(_.INCLUDE?.[key]),
         };
 
-        const data = await prisma[key].findFirst({
+        const data = await entity.findFirst({
           ...args,
           where: { id },
         });
@@ -42,9 +42,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }
       case 'PUT': {
         const create = JSON.parse(req.body);
-        let { id: _, createdAt, updatedAt, ...update } = create;
+        const { id: _, createdAt, updatedAt, ...update } = create;
 
-        const data = await prisma[key].upsert({
+        const data = await entity.upsert({
           where: { id },
           create,
           update,
@@ -54,18 +54,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         break;
       }
       case 'PATCH': {
-        let { id: _, createdAt, updatedAt, ...data } = JSON.parse(req.body);
+        const { id: _, createdAt, updatedAt, ...body } = JSON.parse(req.body);
 
-        data = await prisma[key].update({
+        const data = await entity.update({
           where: { id },
-          data,
+          data: body,
         });
 
         res.status(StatusCodes.OK).json({ data });
         break;
       }
       case 'DELETE': {
-        const data = await prisma[key].delete({
+        const data = await entity.delete({
           where: { id },
         });
 
@@ -78,7 +78,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   } catch (error) {
     // FIXME: not working in this version
     // if (error instanceof PrismaClientKnownRequestError) {
-    if (String(error.message).includes('prisma.')) {
+    if (error instanceof Error) {
       res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
     } else {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: ReasonPhrases.INTERNAL_SERVER_ERROR });
