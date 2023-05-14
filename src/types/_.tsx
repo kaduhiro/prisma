@@ -1,3 +1,14 @@
+// types
+export type _Constant = {
+  cacheKey: { [key: string]: string };
+};
+
+export type _IncludeType = boolean | _IncludeTypeObject;
+
+export type _IncludeTypeObject = {
+  [key: string]: _IncludeType;
+};
+
 // api
 export type RequestPagination = {
   page: number;
