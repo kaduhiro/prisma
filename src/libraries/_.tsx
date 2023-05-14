@@ -35,7 +35,7 @@ export const paginatePrisma = (
   let skip = typeof query.offset === 'string' ? Number(query.offset) : 0;
 
   // order
-  let orderBy: RequestOrder = {};
+  const orderBy: RequestOrder = {};
   if (typeof query.order === 'string') {
     const order = JSON.parse(query.order);
     Object.keys(order).map((key) => {
