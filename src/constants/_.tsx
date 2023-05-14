@@ -1,4 +1,13 @@
-export const _ = {
+import { _IncludeTypeObject } from '@/types';
+
+type _ = {
+  KEY: Partial<{ [key: string]: string }>;
+  API_ENDPOINT: string;
+  INCLUDE: _IncludeTypeObject;
+  PER_PAGE: number;
+};
+
+export const _: _ = {
   KEY: {
     post: 'post',
   },
