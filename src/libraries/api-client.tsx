@@ -1,6 +1,6 @@
-import { StatusCodes } from 'http-status-codes';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 
-import { ApiQueryArgs, ApiResponse, ApiClientInterface } from '@/types';
+import { ApiQueryArgs, ApiResponse, ApiClientInterface, ApiError } from '@/types';
 
 const headers = {
   Accept: 'application/json, */*',
@@ -96,17 +96,18 @@ const request = async <T,>(args: ApiQueryArgs): Promise<ApiResponse<T>> => {
       data: await res.json(),
     };
   } catch (error) {
+    let message: string = ReasonPhrases.INTERNAL_SERVER_ERROR;
+
     if (error instanceof TypeError) {
-      return Promise.reject({
-        status: StatusCodes.INTERNAL_SERVER_ERROR,
-        error: { message: error.cause },
-      });
-    } else {
-      return Promise.reject({
-        status: StatusCodes.INTERNAL_SERVER_ERROR,
-        error: { message: error.message },
-      });
+      message = String(error.cause);
+    } else if (error instanceof Error) {
+      message = error.message;
     }
+
+    return Promise.reject({
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      error: { message },
+    });
   }
 };
 
