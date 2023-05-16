@@ -1,6 +1,12 @@
 module.exports = {
   plugins: ['import', 'unused-imports', 'sort-export-all', 'tailwindcss'],
-  extends: ['next', 'next/core-web-vitals', 'plugin:tailwindcss/recommended', 'prettier'],
+  extends: [
+    'next',
+    'next/core-web-vitals',
+    'plugin:tailwindcss/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'prettier',
+  ],
   rules: {
     'no-restricted-imports': [
       'error',
@@ -62,8 +68,11 @@ module.exports = {
     ],
     'no-console': 'error',
     'no-empty': ['error', { allowEmptyCatch: true }],
-    'unused-imports/no-unused-imports': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
     'sort-export-all/sort-export-all': 'warn',
+    'unused-imports/no-unused-imports': 'error',
+    '@typescript-eslint/no-unused-vars': 'warn',
+    '@typescript-eslint/no-explicit-any': 'warn',
     '@next/next/no-img-element': 'off', // if run yarn export, need to use <img> instead of <Image>
   },
 };
