@@ -4,7 +4,7 @@ interface Window {
   gtag: any;
 }
 
-declare var window: Window;
+declare const window: Window;
 
 export const GtagHandler = (url: string) => {
   window.gtag('config', process.env.NEXT_PUBLIC_GA_ID, {
