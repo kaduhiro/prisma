@@ -5,6 +5,11 @@ SERVICE := prisma
 ENVIRONMENT    := development
 DOCKER_COMPOSE := docker-compose -f deployments/$(ENVIRONMENT)/docker-compose.yml
 
+studio:
+	$(DOCKER_COMPOSE) exec $(SERVICE) yarn db:studio
+rebuild:
+	$(DOCKER_COMPOSE) exec $(SERVICE) yarn db:rebuild
+
 build: build/$(SERVICE)
 build/%: # build or rebuild a image
 	$(DOCKER_COMPOSE) build $*
